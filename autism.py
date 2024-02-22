@@ -13,5 +13,36 @@ from imblearn.over_sampling import RandomOverSampler
 import warnings
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv('netflix_titles.csv')
+df = pd.read_csv('data/netflix_titles.csv')
 print(df.head())
+
+df.shape
+df.info()
+df.describe().T
+
+df['type'].value_counts()
+df['rating'].value_counts()
+
+plt.pie(df['type'].value_counts().values, autopct='%1.1f%%')
+plt.show()
+
+ints = []
+objects = []
+
+for col in df.columns:
+    if df[col].dtype == int:
+        ints.append(col)
+    else:
+        objects.append(col)
+
+objects.remove('show_id')
+objects.remove('type')
+
+plt.subplots(figsize=(15,30))
+
+for i, col in enumerate(objects):
+    plt.subplot(5,3,i+1)
+    sb.countplot(df[col], hue=df['type'])
+    plt.xticks(rotation=60)
+plt.tight_layout()
+plt.show()
