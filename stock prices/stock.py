@@ -31,7 +31,7 @@ df[df['Close'] == df['Adj Close']].shape
 df = df.drop(['Adj Close'], axis=1) #drop redundant data
 
 #check for null values
-df.isnull().sum()
+print(df.isnull().sum())
 
 features = ['Open', 'High', 'Low', 'Close', 'Volume']
 
@@ -51,13 +51,35 @@ for i, col in enumerate(features):
 
 #FEATURE ENGINEERING
 #get insights from date
-splitted = df['Date'].str.split('/', expand=True)
+# Split the 'Date' column
+splitted = df['Date'].str.split('-', expand=True)
 
-df['day'] = splitted[1].astype('int')
-df['month'] = splitted[0].astype('int')
-df['year'] = splitted[2].astype('int')
+# Assign day, month, and year to DataFrame columns
+df['year'] = splitted[0].astype('int')
+df['month'] = splitted[1].astype('int')
+df['day'] = splitted[2].astype('int')
 
-df.head()
+# Print the DataFrame to check the changes
+print(df.head())
 
 df['is_quater_end'] = np.where(df['month']%3==0,1,0)
 df.head()
+
+#df['year'] = df['year'].astype('object')
+data_grouped = df.groupby('year').mean()
+plt.subplots(figsize=(20,10))
+
+for i, col in enumerate(['Open', 'High', 'Low', 'Close']):
+    plt.subplot(2,2,i+1)
+    data_grouped[col].plot.bar()
+    plt.show()
+
+df.groupby('is_quater_end').mean()
+
+df['open-close'] = df['Open'] - df['Close']
+df['low-high'] = df['Low'] - df['High']
+df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
+#check if target is balanced
+plt.pie(df['target'].value_counts().values,
+        labels=[0, 1], autopct='%1.1f%%')
+plt.show()
