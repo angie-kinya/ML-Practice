@@ -40,3 +40,13 @@ model.fit(train_images, train_labels, epochs=5, batch_size=32, validation_data=(
 #evaluate the model using the test data
 test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Accuracy:", test_accuracy)
+
+#make predictions of the test data
+predictions = model.predict(test_images)
+
+#convert the predictions from probabilities to class labels
+predicted_labels = np.argmax(predictions, axis=1)
+
+#display some predictions with their corresponding true labels
+for i in range(10):
+    print("Predicted:", predicted_labels[i], "True Label:", np.argmax(test_labels[i]))
