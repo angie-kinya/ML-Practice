@@ -22,3 +22,21 @@ test_labels = tf.one_hot(test_labels, depth=10)
 
 plt.imshow(train_images[0].reshape(28, 28), cmap='gray')
 plt.show()
+
+#introsduce linear classifier model using Keras sequential API
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28, 1)), #flatten the input images
+    tf.keras.layers.Dense(10, activation='softmax') #output layer with softmax activation for classification
+])
+
+#compile the model
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+#train the model
+model.fit(train_images, train_labels, epochs=5, batch_size=32, validation_data=(test_images, test_labels))
+
+#evaluate the model using the test data
+test_loss, test_accuracy = model.evaluate(test_images, test_labels)
+print("Test Accuracy:", test_accuracy)
