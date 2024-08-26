@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 
 #load the iris dataset
-df = pd.read_csv('data/iris.csv')
+df = pd.read_csv('iris/data/Iris.csv')
 
 #split into features and labels
 x = df[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']]

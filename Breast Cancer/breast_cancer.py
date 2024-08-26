@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
-import seaborn as sb
-import matplotlib.pyplot as plt
+import seaborn as sb 
+import matplotlib.pyplot as plt 
 
 import warnings
 warnings.filterwarnings('ignore')
+
 #import the data
 from sklearn.datasets import load_breast_cancer
 breast_cancer = load_breast_cancer()
@@ -35,24 +36,28 @@ print("xtest shape : ", xtest.shape)
 print("ytrain shape : ", ytrain.shape)
 print("ytest shape : ", ytest.shape)
 
-#fit linear regression to train the model
-from sklearn.linear_model import LinearRegression
-# Instantiate the LinearRegression model
-regressor = LinearRegression()
+#fit logistic regression to train the model
+from sklearn.linear_model import LogisticRegression
+# Instantiate the Logistic Regression model
+classifier = LogisticRegression(max_iter=10000)
 # Train the model using the training data
-regressor.fit(xtrain, ytrain)
+classifier.fit(xtrain, ytrain)
 # Predict the test set results
-y_pred = regressor.predict(xtest)
+y_pred = classifier.predict(xtest)
 
-#plot the prediction
-plt.scatter(ytest, y_pred, c = "purple")
-plt.xlabel("Diagnosis")
-plt.ylabel("Predicted Value")
-plt.title("Diagnosis vs Predicted Value : Linear Regression")
+#evaluate the model
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+accuracy = accuracy_score(ytest, y_pred)
+print("Accuracy: ", accuracy)
+
+print("Confusion Matrix:\n", confusion_matrix(ytest, y_pred))
+
+print("Classification Report:\n", classification_report(ytest, y_pred))
+
+#plot the confusion matrix
+sb.heatmap(confusion_matrix(ytest, y_pred), annot=True, fmt="d", cmap="coolwarm")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix")
 plt.show()
-
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-mse = mean_squared_error(ytest, y_pred)
-mae = mean_absolute_error(ytest,y_pred)
-print("Mean Square Error : ", mse)
-print("Mean Absolute Error : ", mae)
